@@ -1,0 +1,8 @@
+# Gitignore for the following technologies: Assembler
+
+*.exe
+*.o
+*.obj
+*.bc
+
+include/
