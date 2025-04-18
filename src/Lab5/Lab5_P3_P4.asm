@@ -1,15 +1,15 @@
 .model tiny
 .data
-  dat1 db "hello12345world67890"
-  len1 equ 20
+  dat1    db "hello12345world67890"
+  len1    equ 20
 
-  prompt db "Enter the string to be compared$"
+  prompt  db "Enter the string to be compared$"
   success db "Matching string found$"
-  fail db "Matching string not found$"
+  fail    db "Matching string not found$"
 
   max_len db 5
   str_len db ?
-  input db 6 dup(24h)
+  input   db 6 dup(24h)
 
 .code
 .startup
