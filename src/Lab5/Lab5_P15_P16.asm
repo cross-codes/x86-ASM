@@ -58,8 +58,8 @@ __NEXT_MASK:
 
   ; Print result
   mov al, '0'
-  add [di], al
-  mov dl, [di]
+  add BYTE PTR[di], al
+  mov dl, BYTE PTR[di]
   mov ah, 02h
   int 21h
 
