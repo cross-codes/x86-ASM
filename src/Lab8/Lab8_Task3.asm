@@ -3,6 +3,7 @@
   set           db 0
   left_col_pos  db 0
   right_col_pos db 40
+  current_row   db 0
 
 .code
 .startup
@@ -52,9 +53,30 @@ __COLOR_RIGHT:
   ; Continuously accept input
 __RECEIVE:
   lea si, left_col_pos
+  lea di, current_row
+  mov al, [si]
+  cmp al, 39
+  jnz __SAME_LINE
+
+  ; Handle line updates
+  mov al, [di]
+  inc al
+  mov [di], al
+
+  mov al, [si]
+  mov al, 0
+  mov [si], al
+
+  lea si, right_col_pos
+  mov al, [si]
+  mov al, 40
+  mov [si], al
+
+  lea si, left_col_pos
+__SAME_LINE:
   ; Set cursor for left column
   mov ah, 02h
-  mov dh, 00h
+  mov dh, [di]
   mov dl, [si]
   mov bh, 00h
   int 10h
@@ -91,9 +113,10 @@ __DISPLAY_PRE:
 
 __DISPLAY:
   lea si, left_col_pos
+  lea di, current_row
   ; Set cursor for left column
   mov ah, 02h
-  mov dh, 00h
+  mov dh, [di]
   mov dl, [si]
   mov bh, 00h
   int 10h
@@ -101,6 +124,7 @@ __DISPLAY:
   ; Write
   mov ah, 09h
   mov bh, 00h
+  mov bl, 00011110b
   mov cx, 1
   int 10h
 
@@ -109,24 +133,25 @@ __DISPLAY:
   inc cl
   mov [si], cl
 
-  lea di, right_col_pos
+  lea si, right_col_pos
   ; Set cursor for right column
   mov ah, 02h
-  mov dh, 00h
-  mov dl, [di]
+  mov dh, [di]
+  mov dl, [si]
   mov bh, 00h
   int 10h
 
   ; Write
   mov ah, 09h
   mov bh, 00h
+  mov bl, 01111010b
   mov cx, 1
   int 10h
 
   ; Update right column position
-  mov cl, [di]
+  mov cl, [si]
   inc cl
-  mov [di], cl
+  mov [si], cl
 
   jmp __RECEIVE
 
